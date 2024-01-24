@@ -9,6 +9,7 @@
     "build": "nest build",
     "dev": "nest start --builder swc --watch",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "generate:metadata": "npx ts-node src/generate-metadata.ts",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
