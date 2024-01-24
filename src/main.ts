@@ -4,6 +4,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import metadata from './metadata';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -18,6 +19,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('pos')
     .build();
+  await SwaggerModule.loadPluginMetadata(metadata);
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
