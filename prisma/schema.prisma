@@ -115,20 +115,20 @@ model Product {
   status           ProductStatus      @default(DRAFT)
   publishedScope   PublishedScope     @default(ALL)
   publishedAt      DateTime?
-  inventory        Inventory?
   supplierId       Int?
   supplier         Supplier?          @relation(fields: [supplierId], references: [id])
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  inventory        Inventory?
   categories       ProductCategory[]
   images           ProductImage[]
   variants         ProductVariant[]
   options          ProductOption[]
   reviews          Review[]
   promotions       Promotion[]
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
+  tranfers         Tranfer[]
   productsOnOrders ProductsOnOrders[]
   productsOnGroups ProductsOnGroups[]
-  Tranfer          Tranfer[]
 }
 
 model Group {
@@ -238,7 +238,7 @@ model ProductOption {
   position  Int      @default(1)
   values    String[]
   productId Int
-  Product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -254,7 +254,7 @@ model Inventory {
   productVariantId Int?            @unique
   productVariant   ProductVariant? @relation(fields: [productVariantId], references: [id])
   warehouseId      Int?
-  Warehouse        Warehouse?      @relation(fields: [warehouseId], references: [id])
+  warehouse        Warehouse?      @relation(fields: [warehouseId], references: [id])
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
 }
