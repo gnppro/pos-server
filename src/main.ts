@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -7,6 +7,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import metadata from './metadata';
 import { AppModule } from './app.module';
+import { PrismaClientExceptionFilter } from './prisma-client-exception/prisma-client-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -14,8 +15,10 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
 
+  // Validation Pipe
   app.useGlobalPipes(new ValidationPipe());
 
+  // Swagger
   const config = new DocumentBuilder()
     .setTitle('POS')
     .setDescription('POS API')
@@ -25,6 +28,10 @@ async function bootstrap() {
   await SwaggerModule.loadPluginMetadata(metadata);
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
+  // Exception Filter
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
   await app.listen(3000);
 }
